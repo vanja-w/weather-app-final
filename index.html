@@ -10,6 +10,10 @@
       integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
       crossorigin="anonymous"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.12/css/weather-icons.min.css"
+    />
     <link rel="stylesheet" href="src/style.css" />
     <title>Weather App</title>
   </head>
@@ -38,37 +42,39 @@
         </form>
         <div class="loc-time-weather-info">
           <div class="row">
-            <div class="col-8">
-              <span>Wednesday, 26 January 2022 | 11:26</span>
-              <h1>New York</h1>
+            <div class="col-8 loc-time">
+              <span id="date">Wednesday, 26 January 2022</span> |
+              <span id="time">11:26</span>
+              <h1 id="location-name">New York</h1>
             </div>
-            <div class="col-2">
-              <img src="" alt="weather icon" />
+            <div class="col-1 weather-icon">
+              <i id="weather-icon" class="wi wi-day-sunny"></i>
             </div>
-            <div class="col-2">
-              <span>8</span>
-              <span>°C | °F</span>
+
+            <div class="col-3 temperature-info">
+              <span id="temperature-num">18</span>
+              <span class="units">°C | <a href="#">°F</a></span>
             </div>
           </div>
-          <div class="row">
+          <div class="row weather-info-detail">
             <div class="col">
-              <span>Wind speed:</span>
+              <p>Wind speed: <span id="wind-speed"></span></p>
             </div>
             <div class="col">
-              <span>Humidity:</span>
+              <p>Humidity: <span id="humidity"></span></p>
             </div>
             <div class="col">
-              <span>Precipitation:</span>
+              <p>Precipitation: <span id="precipitation"></span></p>
             </div>
           </div>
         </div>
       </div>
-      <small>
+      <footer>
         <a href="https://github.com/vanja-w/weather-app-project-final"
           >Open-source code</a
         >
         by Vanja Wallace
-      </small>
+      </footer>
     </div>
     <script src="src/app.js"></script>
   </body>
