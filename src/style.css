@@ -110,11 +110,22 @@ body {
 .weather-info-detail p {
   background-color: rgba(49, 102, 168, 0.4);
   width: 100%;
-  text-align: justify;
+  text-align: center;
   padding: 10px 20px;
   border-radius: 5px;
   font-size: 14px;
   margin-bottom: 0px;
+  letter-spacing: 0.5px;
+}
+
+#weather-description {
+  font-size: 1.1rem;
+  font-weight: 300;
+  letter-spacing: 0.1rem;
+}
+
+#weather-description::first-letter {
+  text-transform: capitalize;
 }
 
 footer {

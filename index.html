@@ -10,11 +10,13 @@
       integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
       crossorigin="anonymous"
     />
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.12/css/weather-icons.min.css"
     />
     <link rel="stylesheet" href="src/style.css" />
+
     <title>Weather App</title>
   </head>
   <body>
@@ -33,7 +35,7 @@
             </div>
             <div class="col-md-4">
               <input
-                type="button"
+                type="submit"
                 class="btn btn-primary w-100"
                 value="SEARCH"
               />
@@ -45,26 +47,26 @@
             <div class="col-8 loc-time">
               <span id="date">Wednesday, 26 January 2022</span> |
               <span id="time">11:26</span>
-              <h1 id="location-name">New York</h1>
+              <h1 id="location-name"></h1>
             </div>
             <div class="col-1 weather-icon">
               <i id="weather-icon" class="wi wi-day-sunny"></i>
             </div>
 
             <div class="col-3 temperature-info">
-              <span id="temperature-num">18</span>
+              <span id="temperature-num"></span>
               <span class="units">°C | <a href="#">°F</a></span>
             </div>
           </div>
           <div class="row weather-info-detail">
             <div class="col">
-              <p>Wind speed: <span id="wind-speed"></span></p>
+              <p>Wind speed: <span id="wind-speed"></span> km/h</p>
             </div>
             <div class="col">
-              <p>Humidity: <span id="humidity"></span></p>
+              <p>Humidity: <span id="humidity"></span>%</p>
             </div>
             <div class="col">
-              <p>Precipitation: <span id="precipitation"></span></p>
+              <span id="weather-description"></span>
             </div>
           </div>
         </div>
