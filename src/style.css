@@ -63,8 +63,7 @@ body {
   letter-spacing: 4px;
 }
 
-#date,
-#time {
+#date-time {
   letter-spacing: 1px;
   font-weight: 300;
 }
