@@ -109,3 +109,26 @@ function showPosition(position) {
 }
 
 navigator.geolocation.getCurrentPosition(showPosition);
+
+function showFahrenheitTemp(event) {
+  event.preventDefault();
+  celsiusTag.classList.remove("active");
+  fahrenheitTag.classList.add("active");
+  let fahrenheitTemp = (celsiusTemp * 9) / 5 + 32;
+  document.querySelector("#temperature-num").innerHTML =
+    Math.round(fahrenheitTemp);
+}
+
+function showCelsiusTemp(event) {
+  event.preventDefault();
+  celsiusTag.classList.add("active");
+  fahrenheitTag.classList.remove("active");
+  document.querySelector("#temperature-num").innerHTML =
+    Math.round(celsiusTemp);
+}
+
+let celsiusTag = document.querySelector("#celsiusTag");
+celsiusTag.addEventListener("click", showCelsiusTemp);
+
+let fahrenheitTag = document.querySelector("#fahrenheitTag");
+fahrenheitTag.addEventListener("click", showFahrenheitTemp);

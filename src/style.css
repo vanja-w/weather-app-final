@@ -135,3 +135,18 @@ footer {
   width: 100%;
   margin-top: 80px;
 }
+
+.temperature-info a {
+  color: rgb(213, 231, 255);
+  text-decoration: none;
+}
+
+.temperature-info a:hover {
+  opacity: 0.7;
+}
+
+.temperature-info .active {
+  cursor: default;
+  color: rgb(213, 231, 255);
+  opacity: 0.7;
+}
