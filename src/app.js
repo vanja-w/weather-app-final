@@ -46,20 +46,66 @@ function formatDateTime(timezone) {
 
 function displayWeatherData(response) {
   console.log(response.data);
-  let locationElement = document.querySelector("#location-name");
-  locationElement.innerHTML = response.data.name;
-  let temperatureElement = document.querySelector("#temperature-num");
-  temperatureElement.innerHTML = Math.round(response.data.main.temp);
-  let windSpeedElement = document.querySelector("#wind-speed");
-  windSpeedElement.innerHTML = Math.round(response.data.wind.speed);
-  let humidityElement = document.querySelector("#humidity");
-  humidityElement.innerHTML = response.data.main.humidity;
-  let weatherDescription = document.querySelector("#weather-description");
-  weatherDescription.innerHTML = response.data.weather[0].description;
-  let dateTimeElement = document.querySelector("#date-time");
-  dateTimeElement.innerHTML = formatDateTime(response.data.timezone);
+  document.querySelector("#location-name").innerHTML = response.data.name;
+  document.querySelector("#temperature-num").innerHTML = Math.round(
+    response.data.main.temp
+  );
+  document.querySelector("#wind-speed").innerHTML = Math.round(
+    response.data.wind.speed
+  );
+  document.querySelector("#humidity").innerHTML = response.data.main.humidity;
+  document.querySelector("#weather-description").innerHTML =
+    response.data.weather[0].description;
+  document.querySelector("#date-time").innerHTML = formatDateTime(
+    response.data.timezone
+  );
+
+  celsiusTemp = response.data.main.temp;
 }
 
-let apiKey = "c904083ce9d848d6eee6931b635cd191";
-let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=Honolulu&appid=${apiKey}&units=metric`;
-axios.get(apiUrl).then(displayWeatherData);
+//Checks if input is empty, has spaces or is a digit. IMPORTANT -> Find solution for special chars!!
+function isEmptyOrSpaces(str) {
+  return str === null || str.match(/^ *$/) !== null || /^\d+$/.test(str);
+}
+
+function handleSubmit(event) {
+  event.preventDefault();
+  let userLocationInput = document.querySelector("#search-text-input");
+  if (isEmptyOrSpaces(userLocationInput.value)) {
+    alert(`Invalid input!`);
+  } else {
+    console.log(userLocationInput.value);
+    document.querySelector("#location-name").innerHTML =
+      userLocationInput.value.replace(
+        //returns every string's first char capitalized / title case
+        /(^|[\s-])\S/g,
+        function (match) {
+          return match.toUpperCase();
+        }
+      );
+  }
+  searchLocation(userLocationInput.value);
+}
+
+let form = document.querySelector("#search-form");
+form.addEventListener("submit", handleSubmit);
+
+function searchLocation(userLocationInput) {
+  let apiKey = "c904083ce9d848d6eee6931b635cd191";
+  let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${userLocationInput}&appid=${apiKey}&units=metric`;
+  axios.get(apiUrl).then(displayWeatherData);
+}
+
+//shows real-time weather data for user's location on load
+function showPosition(position) {
+  let lat = position.coords.latitude;
+  let lon = position.coords.longitude;
+
+  let apiKey = "84617a2d9f6cdc8070faab840a39470e";
+  let apiGeoUrl = "https://api.openweathermap.org/data/2.5/weather?";
+  axios
+    .get(`${apiGeoUrl}lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`)
+    .then(displayWeatherData);
+}
+
+navigator.geolocation.getCurrentPosition(showPosition);
