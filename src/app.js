@@ -59,13 +59,55 @@ function displayWeatherData(response) {
   document.querySelector("#date-time").innerHTML = formatDateTime(
     response.data.timezone
   );
+  document
+    .querySelector("#weather-icon")
+    .setAttribute(
+      "class",
+      `wi ${getWeatherIcon(weatherIcon, response.data.weather[0].id)}`
+    );
 
   celsiusTemp = response.data.main.temp;
+}
+
+//create object for weather condition codes
+const weatherIcon = {
+  Thunderstorm: "wi-thunderstorm",
+  Drizzle: "wi-sleet",
+  Rain: "wi-rain",
+  Snow: "wi-snow",
+  Atmosphere: "wi-fog",
+  Clear: "wi-day-sunny",
+  Cloud: "wi-cloudy",
+};
+
+//function that generates a suitable weather icon based on the weather id retrieved from the API
+function getWeatherIcon(weatherIcon, rangeId) {
+  if (rangeId >= 200 && rangeId <= 232) {
+    return weatherIcon.Thunderstorm;
+  } else if (rangeId >= 300 && rangeId <= 321) {
+    return weatherIcon.Drizzle;
+  } else if (rangeId >= 500 && rangeId <= 531) {
+    return weatherIcon.Rain;
+  } else if (rangeId >= 600 && rangeId <= 622) {
+    return weatherIcon.Snow;
+  } else if (rangeId >= 701 && rangeId <= 781) {
+    return weatherIcon.Atmosphere;
+  } else if (rangeId == 800) {
+    return weatherIcon.Clear;
+  } else if (rangeId >= 801 && rangeId <= 804) {
+    return weatherIcon.Cloud;
+  }
 }
 
 //Checks if input is empty, has spaces or is a digit. IMPORTANT -> Find solution for special chars!!
 function isEmptyOrSpaces(str) {
   return str === null || str.match(/^ *$/) !== null || /^\d+$/.test(str);
+}
+
+function searchLocation(userLocationInput) {
+  let apiKey = "c904083ce9d848d6eee6931b635cd191";
+  let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${userLocationInput}&appid=${apiKey}&units=metric`;
+  axios.get(apiUrl).then(displayWeatherData);
 }
 
 function handleSubmit(event) {
@@ -87,14 +129,8 @@ function handleSubmit(event) {
   searchLocation(userLocationInput.value);
 }
 
-let form = document.querySelector("#search-form");
-form.addEventListener("submit", handleSubmit);
-
-function searchLocation(userLocationInput) {
-  let apiKey = "c904083ce9d848d6eee6931b635cd191";
-  let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${userLocationInput}&appid=${apiKey}&units=metric`;
-  axios.get(apiUrl).then(displayWeatherData);
-}
+//show on load before user's geoLoc loads
+searchLocation("Berlin");
 
 //shows real-time weather data for user's location on load
 function showPosition(position) {
@@ -109,6 +145,9 @@ function showPosition(position) {
 }
 
 navigator.geolocation.getCurrentPosition(showPosition);
+
+let form = document.querySelector("#search-form");
+form.addEventListener("submit", handleSubmit);
 
 function showFahrenheitTemp(event) {
   event.preventDefault();
