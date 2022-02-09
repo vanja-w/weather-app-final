@@ -44,8 +44,14 @@ function formatDateTime(timezone) {
   return `${day}, ${date} ${month} ${year} | ${hours}:${minutes}`;
 }
 
+//function that fetches daily forecast API data
+function getForecast(coordinates) {
+  let apiKey = "c904083ce9d848d6eee6931b635cd191";
+  let apiUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${coordinates.lat}&lon=${coordinates.lon}&exclude={part}&appid=${apiKey}&units=metric`;
+  axios.get(apiUrl).then(displayForecast);
+}
+
 function displayWeatherData(response) {
-  console.log(response.data);
   document.querySelector("#location-name").innerHTML = response.data.name;
   document.querySelector("#temperature-num").innerHTML = Math.round(
     response.data.main.temp
@@ -67,6 +73,9 @@ function displayWeatherData(response) {
     );
 
   celsiusTemp = response.data.main.temp;
+
+  //calling daily forecest function
+  getForecast(response.data.coord);
 }
 
 //create object for weather condition codes
@@ -76,8 +85,16 @@ const weatherIcon = {
   Rain: "wi-rain",
   Snow: "wi-snow",
   Atmosphere: "wi-fog",
+  Smoke: "wi-smoke",
+  Haze: "wi-day-haze",
+  Dust: "wi-dust",
+  Fog: "wi-fog",
+  Sand: "wi-sandstorm",
+  Tornado: "wi-tornado",
   Clear: "wi-day-sunny",
-  Cloud: "wi-cloudy",
+  FewClouds: "wi-day-cloudy",
+  ScatteredCloud: "wi-cloud",
+  Clouds: "wi-cloudy",
 };
 
 //function that generates a suitable weather icon based on the weather id retrieved from the API
@@ -90,12 +107,28 @@ function getWeatherIcon(weatherIcon, rangeId) {
     return weatherIcon.Rain;
   } else if (rangeId >= 600 && rangeId <= 622) {
     return weatherIcon.Snow;
-  } else if (rangeId >= 701 && rangeId <= 781) {
+  } else if (rangeId == 701 || rangeId == 762 || rangeId == 771) {
     return weatherIcon.Atmosphere;
+  } else if (rangeId == 711) {
+    return weatherIcon.Smoke;
+  } else if (rangeId == 721) {
+    return weatherIcon.Haze;
+  } else if (rangeId == 731 || rangeId == 761) {
+    return weatherIcon.Dust;
+  } else if (rangeId == 741) {
+    return weatherIcon.Fog;
+  } else if (rangeId == 751) {
+    return weatherIcon.Sand;
+  } else if (rangeId == 781) {
+    return weatherIcon.Sand;
   } else if (rangeId == 800) {
     return weatherIcon.Clear;
-  } else if (rangeId >= 801 && rangeId <= 804) {
-    return weatherIcon.Cloud;
+  } else if (rangeId == 801) {
+    return weatherIcon.FewClouds;
+  } else if (rangeId == 802) {
+    return weatherIcon.ScatteredCloud;
+  } else if (rangeId == 803 || rangeId == 804) {
+    return weatherIcon.Clouds;
   }
 }
 
@@ -116,7 +149,6 @@ function handleSubmit(event) {
   if (isEmptyOrSpaces(userLocationInput.value)) {
     alert(`Invalid input!`);
   } else {
-    console.log(userLocationInput.value);
     document.querySelector("#location-name").innerHTML =
       userLocationInput.value.replace(
         //returns every string's first char capitalized / title case
@@ -137,7 +169,7 @@ function showPosition(position) {
   let lat = position.coords.latitude;
   let lon = position.coords.longitude;
 
-  let apiKey = "84617a2d9f6cdc8070faab840a39470e";
+  let apiKey = "c904083ce9d848d6eee6931b635cd191";
   let apiGeoUrl = "https://api.openweathermap.org/data/2.5/weather?";
   axios
     .get(`${apiGeoUrl}lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`)
@@ -149,6 +181,7 @@ navigator.geolocation.getCurrentPosition(showPosition);
 let form = document.querySelector("#search-form");
 form.addEventListener("submit", handleSubmit);
 
+//convert Celsius into Fahrenheit
 function showFahrenheitTemp(event) {
   event.preventDefault();
   celsiusTag.classList.remove("active");
@@ -158,6 +191,7 @@ function showFahrenheitTemp(event) {
     Math.round(fahrenheitTemp);
 }
 
+//convert Fahrenheit into Celsius
 function showCelsiusTemp(event) {
   event.preventDefault();
   celsiusTag.classList.add("active");
@@ -171,3 +205,46 @@ celsiusTag.addEventListener("click", showCelsiusTemp);
 
 let fahrenheitTag = document.querySelector("#fahrenheitTag");
 fahrenheitTag.addEventListener("click", showFahrenheitTemp);
+
+//display weather forecast table
+function displayForecast(response) {
+  let forecast = response.data.daily;
+  let forecastElement = document.querySelector("#forecast");
+  let forecastHTML = `<div class="row">`;
+
+  //loop through array in daily and inject html with JS accordingly
+  forecast.forEach(function (forecastDay, index) {
+    if (index < 4) {
+      forecastHTML =
+        forecastHTML +
+        `<div class="col">
+              <div class="weather-forecast-day">${formatDay(
+                forecastDay.dt
+              )}</div>
+              <div class="weather-forecast-icon">
+              <i id="weather-icon-forecast" class="wi ${getWeatherIcon(
+                weatherIcon,
+                forecast[index].weather[0].id
+              )} "></i></div>
+              <div class="weather-forecast-temperature">
+                <span class="weather-forecast-temp-max">${Math.round(
+                  forecastDay.temp.max
+                )}°C |</span>
+                <span class="weather-forecast-temp-min">${Math.round(
+                  forecastDay.temp.min
+                )}°C</span>
+              </div>
+            </div>`;
+    }
+  });
+  forecastHTML = forecastHTML + `</div>`;
+  forecastElement.innerHTML = forecastHTML;
+
+  //format timestamp/datatime into days
+  function formatDay(timestamp) {
+    let date = new Date(timestamp * 1000);
+    let day = date.getDay();
+    let days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    return days[day];
+  }
+}
