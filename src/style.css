@@ -103,7 +103,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-around;
-  margin-top: 20px;
+  margin: 10px 0px;
 }
 
 .weather-info-detail p {
@@ -150,4 +150,35 @@ footer {
   cursor: default;
   color: rgb(213, 231, 255);
   opacity: 0.7;
+}
+
+.weather-forecast .row {
+  align-items: center;
+  justify-content: space-around;
+  margin: 30px 0px 0px 0px;
+  gap: 1.5rem;
+}
+
+.weather-forecast .col {
+  background-color: rgba(49, 102, 168, 0.4);
+  width: 100%;
+  text-align: center;
+  padding: 10px 10px;
+  border-radius: 5px;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+}
+
+.weather-forecast-icon {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+.weather-forecast-day {
+  letter-spacing: 2px;
+  margin-bottom: 5px;
+}
+
+.weather-forecast-temperature {
+  letter-spacing: 1px;
 }
